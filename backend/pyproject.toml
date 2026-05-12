@@ -1,0 +1,33 @@
+[project]
+name = "dreamforge-backend"
+version = "0.1.0"
+description = "Backend for dreamforge: ingest documents, build a semantic graph, generate dream narratives."
+requires-python = ">=3.11"
+readme = "../README.md"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "SIM"]
+ignore = ["E501"]  # long lines: leave to formatter
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B011"]  # asserts in tests
+# FastAPI's idiom uses Depends/File/Form in argument defaults.
+"app/api/*.py" = ["B008"]
+# Exception names match the public error codes in the API contract; we
+# deliberately do not append "Error" to keep the JSON `error` field readable.
+"app/core/exceptions.py" = ["N818"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-ra -q"
+markers = [
+    "network: tests that hit external services (Groq)",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
